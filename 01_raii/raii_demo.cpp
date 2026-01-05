@@ -36,5 +36,5 @@ int main() {
     Buffer a(1024);
     Buffer b = a;
     Buffer c = std::move(a);
-    std::print("{}\n",sizeof(long));
+    std::print("{}\n",sizeof(Buffer));
 }
