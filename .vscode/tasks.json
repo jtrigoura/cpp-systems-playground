@@ -6,14 +6,24 @@
             "command": "g++",
             "args": [
                 "-fdiagnostics-color=always",
-                "-ggdb",
-                "-O0",
                 "${file}",
                 "-o",
                 "${fileDirname}/build/${fileBasenameNoExtension}",
                 "--std=c++23",
                 "-Wall",
-                "-fsanitize=address,undefined,leak"
+                "-fsanitize=address,undefined,leak",
+                "-g3",
+                "-Og",
+                "-std=c++23",
+                "-fsanitize=address,undefined,leak",
+                "-fno-omit-frame-pointer",
+                "-Wall",
+                "-Wconversion",
+                "-Wpedantic",
+                "-Wfloat-conversion",
+                "-Werror",
+                "-Wextra",
+                "-Wno-interference-size"
             ],
             "options": {
                 "cwd": "${fileDirname}"

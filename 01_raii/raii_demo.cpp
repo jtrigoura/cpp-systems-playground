@@ -6,7 +6,7 @@
 class Buffer {
 public:
     // 1) default ctor
-    Buffer() : size_(0), data_(nullptr) {}
+    explicit Buffer() : size_(0), data_(nullptr) {}
 
     // 2) size ctor
     explicit Buffer(std::size_t size)
@@ -79,7 +79,6 @@ private:
 
 int main() {
     Buffer a(1024);
-
     Buffer b = a;              // copy ctor
     Buffer c = std::move(a);   // move ctor
 
