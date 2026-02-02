@@ -17,6 +17,7 @@ namespace lib
                 resize_();
             dynamic_array_[size_++] = std::move(node);
         }
+        
         T& get(uint64_t index) const{
             return  dynamic_array_[index];
         }
@@ -57,7 +58,7 @@ namespace lib
             if(this==&other)return *this;
             T* new_data= nullptr;
             if(other.capacity_){
-                new_data= new T[capacity_];
+                new_data= new T[other.capacity_];
                 for(uint64_t i=0; i<other.size_;++i)
                     new_data[i]= other.dynamic_array_[i];
             }

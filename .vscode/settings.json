@@ -1,3 +1,4 @@
 {
-    "C_Cpp.default.compilerPath": "g++"
+    "C_Cpp.default.compilerPath": "g++", ".hpp": "cpp",
+        ".cc": "cpp"
 }

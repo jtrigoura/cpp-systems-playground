@@ -7,8 +7,6 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "${file}",
-                "-o",
-                "${fileDirname}/build/${fileBasenameNoExtension}",
                 "--std=c++23",
                 "-Wall",
                 "-fsanitize=address,undefined,leak",
@@ -23,7 +21,9 @@
                 "-Wfloat-conversion",
                 "-Werror",
                 "-Wextra",
-                "-Wno-interference-size"
+                "-Wno-interference-size",
+                "-o",
+                "${fileDirname}/build/${fileBasenameNoExtension}"
             ],
             "options": {
                 "cwd": "${fileDirname}"
