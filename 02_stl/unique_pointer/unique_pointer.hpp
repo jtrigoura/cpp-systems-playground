@@ -1,50 +1,79 @@
 #pragma once
-#include <type_traits>
+#include <stdexcept>
+#include <utility>
 
-namespace ptr{
-    template <class T>
-    class unique_ptr{
+namespace ptr {
+    template <typename T>
+    struct custom_deleter
+    {
+        void operator()(T* pointer) const
+        {
+            delete pointer;
+        }
+    };
 
-        public:
-            unique_ptr()noexcept : ptr_(nullptr){}
+    template <typename T, typename custom_deleter = custom_deleter<T>>
+    class unique_ptr
+    {
+    public:
+        unique_ptr(): p_{nullptr} 
+        {
+        }
+        unique_ptr(T* pointer): p_{pointer}
+        {
+        }
 
-            unique_ptr(T* ptr)noexcept : ptr_(ptr){}
+        unique_ptr(const unique_ptr& other){
+            throw std::logic_error("Can't copy a unique_ptr");
+        }
+        unique_ptr& operator=(const unique_ptr& other) {
+            throw std::logic_error("Can't copy a unique_ptr");
+        }
 
-            unique_ptr(const unique_ptr &other)= delete;
-
-            unique_ptr& operator=(const unique_ptr &other)= delete;
-
-            unique_ptr(unique_ptr &&other)noexcept : ptr_(other.ptr_){
-                other.ptr_= nullptr;
-            }
+        unique_ptr(unique_ptr&& other) noexcept 
+            : p_{other.release()}
+        {
             
-            unique_ptr&& operator=(unique_ptr &&other)noexcept{
-                ptr_=other.ptr_;
-                other.ptr= nullptr;
-            }
+        }
 
-            ~unique_ptr()noexcept(std::is_nothrow_destructible<T>()){
-                delete ptr_;
-            }
+        unique_ptr& operator=(unique_ptr&& other) noexcept
+        {
+            if(other==*this)
+                return *this;
+            this->reset(other.release());
+            return *this;
+        }
 
-            void reset(T* ptr=nullptr){
-                delete ptr_;
-                ptr_=ptr;
-            }
+        ~unique_ptr()
+        {   
+            deleter(p_);
+        }
 
-            T* get()const noexcept{
-                return ptr_;
-            }
+        T* release()
+        {
+            return std::exchange(p_, nullptr);
+        }
 
-            T* operator->(){
-                return ptr_;
+        void reset(T* pointer=nullptr)
+        {            
+            if(p_!= pointer){
+                deleter(p_);
+                p_= pointer;
             }
+            return;
+        }
 
-            T& operator*(){
-                return *ptr_;
-            }
-        private:
-            T* ptr_;
+        bool is_owning() const { 
+            return p_!=nullptr;
+        }
 
+
+        T& operator*() const {return *p_;}
+        T* operator->() const {return p_;}
+        operator bool() const {return p_!=nullptr;}
+
+    private:
+        T* p_;
+        [[no_unique_address]]custom_deleter deleter{};
     };
 }
